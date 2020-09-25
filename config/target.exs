@@ -97,4 +97,4 @@ config :mdns_lite,
 # of this file so it overrides the configuration defined above.
 # Uncomment to use target specific configurations
 
-import_config "target.secrets.exs"
+#import_config "target.secrets.exs"

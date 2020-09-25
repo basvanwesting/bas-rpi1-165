@@ -47,6 +47,8 @@ defmodule BasRpi0163.MixProject do
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.11.3", targets: @all_targets},
       {:nerves_pack, "~> 0.4.0", targets: @all_targets},
+      {:circuits_gpio, "~> 0.4", targets: @all_targets},
+      {:circuits_i2c, "~> 0.3", targets: @all_targets},
 
       # Dependencies for specific targets
       {:nerves_system_rpi, "~> 1.12", runtime: false, targets: :rpi},
