@@ -98,7 +98,7 @@ for i <- 1..100 do
 end
 
 
-### ANALOG TEMP METER on A0
+### ANALOG TEMP METER on A0 raw
 
 pin = 0
 
@@ -114,6 +114,23 @@ r0 = 100000 # R0 = 100k
 r = 1023.0/value - 1.0
 r = r0 * r
 temperature = 1.0/(:math.log(r/r0)/b+1/298.15)-273.15
+
+### ANALOG TEMP METER on A0 using GrovePi.Board
+
+pin = 0
+message = <<3, pin, 0, 0>>
+
+:ok = GrovePi.Board.send_request(message)
+<<_, value::size(16)>> = GrovePi.Board.get_response(3)
+value
+
+b = 4275 # B value of the thermistor
+r0 = 100000 # R0 = 100k
+r = 1023.0/value - 1.0
+r = r0 * r
+temperature = 1.0/(:math.log(r/r0)/b+1/298.15)-273.15
+
+
 
 
 for i <- 1..100 do
