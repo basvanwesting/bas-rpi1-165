@@ -20,6 +20,7 @@ defmodule GrovePi.Board do
   @i2c_retry_count 2
   @type pin :: integer
   @address 0x04
+  @version_cmd 8
 
   defstruct address: nil, i2c_bus: nil
 
@@ -36,7 +37,7 @@ defmodule GrovePi.Board do
   """
   @spec firmware_version() :: binary | {:error, term}
   def firmware_version() do
-    with :ok <- send_request(<<8, 0, 0, 0>>),
+    with :ok <- send_request(<<@version_cmd, 0, 0, 0>>),
          <<_, major, minor, patch>> <- get_response(4),
          do: "#{major}.#{minor}.#{patch}"
   end
