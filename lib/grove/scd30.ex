@@ -41,11 +41,17 @@ defmodule Grove.Scd30 do
   def calculate_crc(value) when is_binary(value)  do
     CRC.calculate(value, @crc_options)
   end
+  def valid_crc?(value, crc) when is_integer(value) do
+    valid_crc?(<<value::16>>, crc)
+  end
+  def valid_crc?(value, crc) when is_binary(value) do
+    calculate_crc(value) == crc
+  end
 
-  def build_message(command) do
+  def build_message(command) when is_integer(command) do
     <<command::16>>
   end
-  def build_message(command, value) do
+  def build_message(command, value) when is_integer(command) and is_integer(value) do
     <<command::16, value::16, calculate_crc(value)::8>>
   end
 
@@ -58,7 +64,17 @@ defmodule Grove.Scd30 do
     message = build_message(@scd30_read_measurement)
     Board.i2c_write_device(@scd30_i2c_address, message)
     reply = Board.i2c_read_device(@scd30_i2c_address, @scd30_read_measurement_number_of_bytes)
-    <<co2_ppm_bytes::48, temperature_bytes::48, humidity_bytes::48>> = reply
+    parse_measurement(reply)
+  end
+
+  def parse_measurement(bytes) when is_binary(bytes) do
+    <<co2_ppm_bytes::48, temperature_bytes::48, humidity_bytes::48>> = bytes
+
+    %Measurement{
+      co2_ppm:     convert_single_measurement_bytes_to_float(co2_ppm_bytes),
+      temperature: convert_single_measurement_bytes_to_float(temperature_bytes),
+      humidity:    convert_single_measurement_bytes_to_float(humidity_bytes),
+    }
   end
 
   def convert_single_measurement_bytes_to_float(value) when is_integer(value) do
@@ -70,6 +86,12 @@ defmodule Grove.Scd30 do
     <<result::float-signed-32>> = <<int::32>>
     result
   end
-
+  def validate_single_measurement_bytes(value) when is_integer(value) do
+    validate_single_measurement_bytes(<<value::48>>)
+  end
+  def validate_single_measurement_bytes(value) when is_binary(value) do
+    <<msb::16, crc_msb::8, lsb::16, crc_lsb::8>> = value
+    valid_crc?(msb, crc_msb) && valid_crc?(lsb, crc_lsb)
+  end
 
 end
