@@ -8,7 +8,7 @@ defmodule BasRpi1165.Application do
   def start(_type, _args) do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: BasRpi1165.Supervisor]
+    opts = [strategy: :rest_for_one, name: BasRpi1165.Supervisor]
 
     children =
       [
@@ -34,7 +34,8 @@ defmodule BasRpi1165.Application do
       # Children for all targets except host
       # Starts a worker by calling: BasRpi1165.Worker.start_link(arg)
       # {BasRpi1165.Worker, arg},
-      {GrovePi.Board, []}
+      {GrovePi.Board, []},
+      {BasRpi1165.MonitorSensors, []}
     ]
   end
 

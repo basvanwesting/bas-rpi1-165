@@ -67,6 +67,13 @@ defmodule GrovePi.Board do
   def i2c_write_device(address, message) do
     GenServer.call(__MODULE__, {:write_device, address, message})
   end
+  @doc """
+  Read directly to a device on the I2C bus. This is used for sensors
+  that are not controlled by the GrovePi's microcontroller.
+  """
+  def i2c_read_device(address, bytes_to_read) do
+    GenServer.call(__MODULE__, {:read_device, address, bytes_to_read})
+  end
 
   ## Server Callbacks
 
@@ -90,6 +97,17 @@ defmodule GrovePi.Board do
   @impl true
   def handle_call({:write_device, address, message}, _from, state) do
     reply = @i2c.write(state.i2c_bus, address, message, retries: @i2c_retry_count)
+    {:reply, reply, state}
+  end
+
+  @impl true
+  def handle_call({:read_device, address, bytes_to_read}, _from, state) do
+    reply =
+      case(@i2c.read(state.i2c_bus, address, bytes_to_read, retries: @i2c_retry_count)) do
+        {:ok, response} -> response
+        {:error, error} -> {:error, error}
+      end
+
     {:reply, reply, state}
   end
 
