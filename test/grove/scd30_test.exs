@@ -5,19 +5,16 @@ defmodule Grove.Scd30Test do
   #doctest Scd30
 
   test "calculate_crc/1" do
-    assert Scd30.calculate_crc(<<0xBEEF::16>>)       == 0x92
-    assert Scd30.calculate_crc(<<0xBE::8, 0xEF::8>>) == 0x92
+    assert Scd30.calculate_crc(<<0xBEEF::16>>)       == <<0x92>>
+    assert Scd30.calculate_crc(<<0xBE::8, 0xEF::8>>) == <<0x92>>
 
-    assert Scd30.calculate_crc(0xBEEF)               == 0x92
-    assert Scd30.calculate_crc(48879)                == 0x92
+    assert Scd30.calculate_crc(0xBEEF)               == <<0x92>>
+    assert Scd30.calculate_crc(48879)                == <<0x92>>
   end
 
   test "valid_crc?/2" do
-    assert Scd30.valid_crc?(<<0xBEEF::16>>, 0x92)
-    assert Scd30.valid_crc?(<<0xBE::8, 0xEF::8>>, 0x92)
-
-    assert Scd30.valid_crc?(0xBEEF, 0x92)
-    assert Scd30.valid_crc?(48879, 0x92)
+    assert Scd30.valid_crc?(<<0xBEEF::16>>, <<0x92>>)
+    assert Scd30.valid_crc?(<<0xBE::8, 0xEF::8>>, <<0x92>>)
   end
 
   test "build_message/1" do

@@ -1,7 +1,7 @@
 defmodule GrovePi.Analog do
   alias GrovePi.Board
 
-  @moduledoc ~S"""
+  @moduledoc """
   Perform analog I/O using the GrovePi.
 
   Analog reads return 10-bit values (0-1023) from analog to digital converters on

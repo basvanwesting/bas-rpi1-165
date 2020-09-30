@@ -1,5 +1,5 @@
 defmodule Grove.TemperatureSensor do
-  @moduledoc ~S"""
+  @moduledoc """
   Temperature Sensor V1.2
 
   Reads temperature in Celsius.

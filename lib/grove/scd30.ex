@@ -1,6 +1,14 @@
 defmodule Grove.Scd30 do
-  @moduledoc ~S"""
+  @moduledoc """
   CO2 & Temperature & Humidity Sensor v1.0 (SCD30)
+  ```
+  iex> measurement = Grove.Scd30.read_measurement()
+  %Grove.Scd30.Measurement{
+    co2_ppm:     439.1,
+    temperature: 27.2,
+    humidity:    48.8
+  }
+  ```
   """
 
   @scd30_i2c_address                      0x61
@@ -39,10 +47,10 @@ defmodule Grove.Scd30 do
     calculate_crc(<<value::16>>)
   end
   def calculate_crc(value) when is_binary(value)  do
-    CRC.calculate(value, @crc_options)
+    <<CRC.calculate(value, @crc_options)>>
   end
 
-  def valid_crc?(value, crc) when is_integer(crc) do
+  def valid_crc?(value, crc) when is_binary(crc) do
     calculate_crc(value) == crc
   end
 
@@ -50,7 +58,7 @@ defmodule Grove.Scd30 do
     <<command::16>>
   end
   def build_message(command, value) when is_integer(command) and is_integer(value) do
-    <<command::16, value::16, calculate_crc(value)::8>>
+    <<command::16, value::16>> <> calculate_crc(value)
   end
 
   def set_interval(interval) when interval >= 2 and interval < 1000 do
@@ -82,7 +90,7 @@ defmodule Grove.Scd30 do
   end
 
   def validate_single_measurement_bytes(value) when is_binary(value) do
-    <<msb::binary-size(2), crc_msb::8, lsb::binary-size(2), crc_lsb::8>> = value
+    <<msb::binary-size(2), crc_msb::binary-size(1), lsb::binary-size(2), crc_lsb::binary-size(1)>> = value
     valid_crc?(msb, crc_msb) && valid_crc?(lsb, crc_lsb)
   end
 
