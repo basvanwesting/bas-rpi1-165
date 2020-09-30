@@ -1,5 +1,14 @@
 
+version_cmd = 8
+dRead_cmd   = 1
+dWrite_cmd  = 2
+aRead_cmd   = 3
+aWrite_cmd  = 4
+pMode_cmd   = 5
+
+
 grovepi_address = 0x04
+scd30_address = 0x61
 i2c = Circuits.I2C
 i2c_retry_count = 2
 
