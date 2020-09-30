@@ -41,10 +41,8 @@ defmodule Grove.Scd30 do
   def calculate_crc(value) when is_binary(value)  do
     CRC.calculate(value, @crc_options)
   end
-  def valid_crc?(value, crc) when is_integer(value) do
-    valid_crc?(<<value::16>>, crc)
-  end
-  def valid_crc?(value, crc) when is_binary(value) do
+
+  def valid_crc?(value, crc) when is_integer(crc) do
     calculate_crc(value) == crc
   end
 
@@ -68,7 +66,7 @@ defmodule Grove.Scd30 do
   end
 
   def parse_measurement(bytes) when is_binary(bytes) do
-    <<co2_ppm_bytes::48, temperature_bytes::48, humidity_bytes::48>> = bytes
+    <<co2_ppm_bytes::binary-size(6), temperature_bytes::binary-size(6), humidity_bytes::binary-size(6)>> = bytes
 
     %Measurement{
       co2_ppm:     convert_single_measurement_bytes_to_float(co2_ppm_bytes),
@@ -77,20 +75,14 @@ defmodule Grove.Scd30 do
     }
   end
 
-  def convert_single_measurement_bytes_to_float(value) when is_integer(value) do
-    convert_single_measurement_bytes_to_float(<<value::48>>)
-  end
   def convert_single_measurement_bytes_to_float(value) when is_binary(value) do
-    <<msb::16, crc_msb::8, lsb::16, crc_lsb::8>> = value
-    <<int::32>> = <<msb::16, lsb::16>>
-    <<result::float-signed-32>> = <<int::32>>
+    <<msb::binary-size(2), _, lsb::binary-size(2), _>> = value
+    <<result::float-signed-32>> = msb <> lsb
     result
   end
-  def validate_single_measurement_bytes(value) when is_integer(value) do
-    validate_single_measurement_bytes(<<value::48>>)
-  end
+
   def validate_single_measurement_bytes(value) when is_binary(value) do
-    <<msb::16, crc_msb::8, lsb::16, crc_lsb::8>> = value
+    <<msb::binary-size(2), crc_msb::8, lsb::binary-size(2), crc_lsb::8>> = value
     valid_crc?(msb, crc_msb) && valid_crc?(lsb, crc_lsb)
   end
 

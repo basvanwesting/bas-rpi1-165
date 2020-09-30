@@ -36,16 +36,6 @@ defmodule Grove.Scd30Test do
     result = Scd30.convert_single_measurement_bytes_to_float(bytes)
     assert_in_delta(result, 439.09, 0.01)
 
-    value = 0x43DBCB8C2E8F
-    assert Scd30.validate_single_measurement_bytes(value)
-    result = Scd30.convert_single_measurement_bytes_to_float(value)
-    assert_in_delta(result, 439.09, 0.01)
-
-    value = 74611291860623
-    assert Scd30.validate_single_measurement_bytes(value)
-    result = Scd30.convert_single_measurement_bytes_to_float(value)
-    assert_in_delta(result, 439.09, 0.01)
-
     bytes = <<0x41::8, 0xD9::8, 0x70::8, 0xE7::8, 0xFF::8, 0xF5::8>>
     assert Scd30.validate_single_measurement_bytes(bytes)
     result = Scd30.convert_single_measurement_bytes_to_float(bytes)
