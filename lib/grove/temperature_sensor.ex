@@ -1,4 +1,14 @@
-defmodule Grove.TemperatureSensorV1_2 do
+defmodule Grove.TemperatureSensor do
+  @moduledoc ~S"""
+  Temperature Sensor V1.2
+
+  Example usage for pin 0 (A0):
+  ```
+  iex> temperature = Grove.TemperatureSensor.read_temperature(0)
+  22.05
+  ```
+  """
+
   alias GrovePi.Analog
 
   @b  4275 # B value of the thermistor
