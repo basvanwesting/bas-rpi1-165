@@ -1,0 +1,16 @@
+{
+  "lib/*.ex": {
+    "alternate": "test/{}_test.exs",
+    "type": "test"
+  },
+  "test/*_test.exs": {
+    "alternate": "lib/{}.ex",
+    "type": "source"
+  },
+  "*": {
+    "path": [
+      ".",
+      "lib"
+    ]
+  }
+}
