@@ -5,7 +5,7 @@ defmodule Grove.TemperatureSensor do
   Reads temperature in Celsius.
   Example usage for pin 0 (A0):
   ```
-  iex> temperature = Grove.TemperatureSensor.read_celsius(0)
+  iex> Grove.TemperatureSensor.read_celsius(0)
   22.05
   ```
   """

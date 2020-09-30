@@ -29,22 +29,19 @@ defmodule Grove.Scd30Test do
 
   test "convert_single_measurement_bytes_to_float/1" do
     bytes = <<0x43::8, 0xDB::8, 0xCB::8, 0x8C::8, 0x2E::8, 0x8F::8>>
-    assert Scd30.validate_single_measurement_bytes(bytes)
     result = Scd30.convert_single_measurement_bytes_to_float(bytes)
     assert_in_delta(result, 439.09, 0.01)
 
     bytes = <<0x41::8, 0xD9::8, 0x70::8, 0xE7::8, 0xFF::8, 0xF5::8>>
-    assert Scd30.validate_single_measurement_bytes(bytes)
     result = Scd30.convert_single_measurement_bytes_to_float(bytes)
     assert_in_delta(result, 27.2, 0.1)
 
     bytes = <<0x42::8, 0x43::8, 0xBF::8, 0x3A::8, 0x1B::8, 0x74::8>>
-    assert Scd30.validate_single_measurement_bytes(bytes)
     result = Scd30.convert_single_measurement_bytes_to_float(bytes)
     assert_in_delta(result, 48.8, 0.1)
   end
 
-  test "parse_measurement/1" do
+  test "parse_measurement/1, valid" do
     bytes = <<0x43::8, 0xDB::8, 0xCB::8, 0x8C::8, 0x2E::8, 0x8F::8>> <>
             <<0x41::8, 0xD9::8, 0x70::8, 0xE7::8, 0xFF::8, 0xF5::8>> <>
             <<0x42::8, 0x43::8, 0xBF::8, 0x3A::8, 0x1B::8, 0x74::8>>
@@ -54,6 +51,18 @@ defmodule Grove.Scd30Test do
     assert_in_delta(measurement.co2_ppm,     439.09, 0.01)
     assert_in_delta(measurement.temperature, 27.2,   0.1)
     assert_in_delta(measurement.humidity,    48.8,   0.1)
+  end
+
+  test "parse_measurement/1, invalid parts" do
+    bytes = <<0x43::8, 0xDB::8, 0xCB::8, 0x8C::8, 0x2E::8, 0x8F::8>> <>
+            <<0x41::8, 0xD9::8, 0x71::8, 0xE7::8, 0xFF::8, 0xF5::8>> <>
+            <<0x43::8, 0x43::8, 0xBF::8, 0x3A::8, 0x1B::8, 0x74::8>>
+
+    %Scd30.Measurement{} = measurement = Scd30.parse_measurement(bytes)
+
+    assert_in_delta(measurement.co2_ppm, 439.09, 0.01)
+    assert measurement.temperature == nil
+    assert measurement.humidity    == nil
   end
 
 end
