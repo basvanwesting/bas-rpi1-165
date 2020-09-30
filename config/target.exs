@@ -68,7 +68,7 @@ config :mdns_lite,
   # "nerves.local" for convenience. If more than one Nerves device is on the
   # network, delete "nerves" from the list.
 
-  host: [:hostname, "bas-rpi0-163"],
+  host: [:hostname, "bas-rpi1-165"],
   ttl: 120,
 
   # Advertise the following services over mDNS.

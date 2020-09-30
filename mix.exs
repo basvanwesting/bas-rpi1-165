@@ -1,7 +1,7 @@
-defmodule BasRpi0163.MixProject do
+defmodule BasRpi1165.MixProject do
   use Mix.Project
 
-  @app :bas_rpi0_163
+  @app :bas_rpi1_165
   @version "0.1.0"
   @all_targets [:rpi, :rpi0, :rpi2, :rpi3, :rpi3a, :rpi4, :bbb, :x86_64]
 
@@ -30,7 +30,7 @@ defmodule BasRpi0163.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      mod: {BasRpi0163.Application, []},
+      mod: {BasRpi1165.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

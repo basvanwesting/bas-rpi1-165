@@ -1,6 +1,6 @@
-defmodule BasRpi0163 do
+defmodule BasRpi1165 do
   @moduledoc """
-  Documentation for BasRpi0163.
+  Documentation for BasRpi1165.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule BasRpi0163 do
 
   ## Examples
 
-      iex> BasRpi0163.hello
+      iex> BasRpi1165.hello
       :world
 
   """
