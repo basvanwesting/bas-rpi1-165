@@ -397,6 +397,9 @@ defmodule Grove.LCDRGBBacklight do
     send_rgb(@reg_green, green)
     send_rgb(@reg_blue, blue)
   end
+  def set_rgb([red, green, blue]) do
+    set_rgb(red, green, blue)
+  end
 
   @doc """
   Updates the text on a RGB LCD Display. Deletes existing text.
