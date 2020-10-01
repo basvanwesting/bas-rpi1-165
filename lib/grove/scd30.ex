@@ -20,7 +20,8 @@ defmodule Grove.Scd30 do
   @scd30_i2c_address                      0x61
   #@scd30_continuous_measurement           0x0010
   @scd30_set_measurement_interval         0x4600
-  #@scd30_get_data_ready                   0x0202
+  @scd30_get_data_ready                   0x0202
+  @scd30_get_data_ready_number_of_bytes   3
   @scd30_read_measurement                 0x0300
   @scd30_read_measurement_number_of_bytes 18
   #@scd30_stop_measurement                 0x0104
@@ -54,11 +55,18 @@ defmodule Grove.Scd30 do
     Board.i2c_write_device(@scd30_i2c_address, message)
   end
 
+  def measurement_ready?() do
+    message = build_message(@scd30_get_data_ready)
+    Board.i2c_write_device(@scd30_i2c_address, message)
+    Board.i2c_read_device(@scd30_i2c_address, @scd30_get_data_ready_number_of_bytes)
+    |> parse_measurement_ready
+  end
+
   def read_measurement() do
     message = build_message(@scd30_read_measurement)
     Board.i2c_write_device(@scd30_i2c_address, message)
-    reply = Board.i2c_read_device(@scd30_i2c_address, @scd30_read_measurement_number_of_bytes)
-    parse_measurement(reply)
+    Board.i2c_read_device(@scd30_i2c_address, @scd30_read_measurement_number_of_bytes)
+    |> parse_measurement
   end
 
   def calculate_crc(value) when is_integer(value)  do
@@ -95,7 +103,17 @@ defmodule Grove.Scd30 do
       <<result::float-signed-32>> = mxsb <> lxsb
       result
     else
-      nil
+      nil #{:error, :invalid_crc}
+    end
+  end
+
+  def parse_measurement_ready(value) when is_binary(value) do
+    <<xsb::binary-size(2), crc_xsb::binary-size(1)>> = value
+    if valid_crc?(xsb, crc_xsb) do
+      <<result::16>> = xsb
+      result == 1
+    else
+      nil #{:error, :invalid_crc}
     end
   end
 

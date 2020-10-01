@@ -101,17 +101,6 @@ defmodule GrovePi.Board do
   end
 
   @impl true
-  def handle_call({:read_device, address, bytes_to_read}, _from, state) do
-    reply =
-      case(@i2c.read(state.i2c_bus, address, bytes_to_read, retries: @i2c_retry_count)) do
-        {:ok, response} -> response
-        {:error, error} -> {:error, error}
-      end
-
-    {:reply, reply, state}
-  end
-
-  @impl true
   def handle_call({:read, bytes_to_read}, _from, state) do
     reply =
       case(@i2c.read(state.i2c_bus, state.address, bytes_to_read, retries: @i2c_retry_count)) do
@@ -122,4 +111,14 @@ defmodule GrovePi.Board do
     {:reply, reply, state}
   end
 
+  @impl true
+  def handle_call({:read_device, address, bytes_to_read}, _from, state) do
+    reply =
+      case(@i2c.read(state.i2c_bus, address, bytes_to_read, retries: @i2c_retry_count)) do
+        {:ok, response} -> response
+        {:error, error} -> {:error, error}
+      end
+
+    {:reply, reply, state}
+  end
 end
