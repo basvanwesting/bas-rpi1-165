@@ -42,17 +42,18 @@ defmodule BasRpi1165.MixProject do
       #{:elixir_make, "~> 0.6", runtime: false},
 
       # Dependencies for all targets
-      {:nerves, "~> 1.6.3", runtime: false},
-      {:shoehorn, "~> 0.6.0"},
-      {:ring_logger, "~> 0.8.1"},
-      {:toolshed, "~> 0.2.13"},
+      {:nerves, "~> 1.6", runtime: false},
+      {:shoehorn, "~> 0.6"},
+      {:ring_logger, "~> 0.8"},
+      {:toolshed, "~> 0.2"},
       {:crc, "~> 0.10"},
 
       # Dependencies for all targets except :host
-      {:nerves_runtime, "~> 0.11.3", targets: @all_targets},
-      {:nerves_pack, "~> 0.4.0", targets: @all_targets},
+      {:nerves_runtime, "~> 0.11", targets: @all_targets},
+      {:nerves_pack, "~> 0.4", targets: @all_targets},
       {:circuits_gpio, "~> 0.4", targets: @all_targets},
       {:circuits_i2c, "~> 0.3", targets: @all_targets},
+      {:vintage_net_mobile, "~> 0.1", targets: @all_targets},
 
       # Dependencies for specific targets
       {:nerves_system_rpi, "~> 1.12", runtime: false, targets: :rpi},

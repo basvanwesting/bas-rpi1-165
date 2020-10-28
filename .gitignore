@@ -17,3 +17,4 @@
 erl_crash.dump
 
 /config/*.secrets.exs
+/.fzf-history
