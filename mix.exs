@@ -31,7 +31,7 @@ defmodule BasRpi1165.MixProject do
   def application do
     [
       mod: {BasRpi1165.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :inets]
     ]
   end
 

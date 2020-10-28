@@ -34,8 +34,6 @@ defmodule BasRpi1165.Application do
       # Children for all targets except host
       # Starts a worker by calling: BasRpi1165.Worker.start_link(arg)
       # {BasRpi1165.Worker, arg},
-      {GrovePi.Board, []},
-      {BasRpi1165.MonitorSensors, []}
     ]
   end
 
